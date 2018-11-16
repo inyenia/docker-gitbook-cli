@@ -1,11 +1,3 @@
-# ==================================================================================================
-#
-# Docker gitbook helper image
-#
-# Provide gitbook commands in a docker image to build and deploy your docs
-#
-# ==================================================================================================
-
 # Base image, default node image
 FROM node:8.4.0-slim
 
@@ -21,6 +13,10 @@ RUN npm install --global gitbook-cli \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /tmp/*
 
+# Fixes https://github.com/GitbookIO/gitbook/issues/1309
+RUN sed -i.bak 's/confirm: true/confirm: false/g' \
+    /root/.gitbook/versions/${GITBOOK_VERSION}/lib/output/website/copyPluginAssets.js
+    
 # Current directory configuration
 WORKDIR /gitbook
 
